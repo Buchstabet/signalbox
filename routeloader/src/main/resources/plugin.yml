@@ -1,0 +1,3 @@
+main: dev.buchstabet.signalbox.routeloader.RailRouteLoader
+version: ${project.version}
+name: ${parent.artifactId}
