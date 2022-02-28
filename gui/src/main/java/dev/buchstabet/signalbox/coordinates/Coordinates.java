@@ -2,7 +2,6 @@ package dev.buchstabet.signalbox.coordinates;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @RequiredArgsConstructor
 public class Coordinates {
 
-  public static final int  POSITION_SIZE = 2;
+  public static int COORDINATE_SIZE = 20;
 
   private final Map<Position, PositionData> positions;
   private final Lock lock = new ReentrantLock();
@@ -25,9 +24,9 @@ public class Coordinates {
     positions.putIfAbsent(position, data);
   }
 
-  public void draw(JFrame jFrame, Graphics graphics) {
+  public void draw(Graphics graphics) {
     lock.lock();
-    positions.forEach((position, data) -> data.draw(position, jFrame, graphics));
+    positions.forEach((position, data) -> data.draw(position, graphics));
     lock.unlock();
   }
 

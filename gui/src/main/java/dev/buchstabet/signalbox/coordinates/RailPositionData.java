@@ -2,7 +2,6 @@ package dev.buchstabet.signalbox.coordinates;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.*;
 import java.awt.*;
 
 @RequiredArgsConstructor
@@ -11,14 +10,13 @@ public class RailPositionData implements PositionData {
   private final boolean vertical;
 
   @Override
-  public void draw(Position position, JFrame jFrame, Graphics graphics) {
-    System.out.println("Drawing: " + position);
+  public void draw(Position position, Graphics graphics) {
 
     graphics.drawLine(
-            position.getX() * Coordinates.POSITION_SIZE,
-            position.getY() * Coordinates.POSITION_SIZE,
-            position.getX() * Coordinates.POSITION_SIZE + (!vertical ? Coordinates.POSITION_SIZE : 0),
-            position.getY() * Coordinates.POSITION_SIZE + (vertical ? Coordinates.POSITION_SIZE : 0));
+            position.getX() * Coordinates.COORDINATE_SIZE,
+            position.getY() * Coordinates.COORDINATE_SIZE,
+            position.getX() * Coordinates.COORDINATE_SIZE + (!vertical ? Coordinates.COORDINATE_SIZE : 0),
+            position.getY() * Coordinates.COORDINATE_SIZE + (vertical ? Coordinates.COORDINATE_SIZE : 0));
 
   }
 
