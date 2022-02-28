@@ -1,6 +1,5 @@
 package dev.buchstabet.signalbox.gui;
 
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -15,11 +14,7 @@ public class SignalMouseListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Click ");
-        signalGui.getCoordinates().findPositionData((int) (e.getX() - signalGui.getSize().getWidth() / 2), (int) (e.getY() - signalGui.getSize().getHeight() / 2)).ifPresent(positionData -> {
-            positionData.handleClick(e);
-            System.out.println("Click validated");
-        });
+        signalGui.getCoordinates().findPositionData((int) (e.getX() - signalGui.getSize().getWidth() / 2), (int) (e.getY() - signalGui.getSize().getHeight() / 2)).ifPresent(positionData -> positionData.handleClick(e));
     }
 
     @Override

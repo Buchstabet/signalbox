@@ -20,8 +20,8 @@ import java.util.Map;
 public class RailRouteLoader extends JavaPlugin implements Listener {
 
   private final Map<Position, Location> locationPositionMap = new HashMap<>();
-  Location start = new Location(Bukkit.getWorld("world"), -165, 77, -501);
-  Coordinates coordinates = new Coordinates(new HashMap<>());
+  private Location start;
+  private final Coordinates coordinates = new Coordinates(new HashMap<>());
 
   private SignalGui signalGui;
 
@@ -40,13 +40,17 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
     return rails.getData();
   }
 
-  public void launch() {
+  public void launch(Location location) {
+    start = location;
     signalGui.setVisible(true);
+    Bukkit.getScheduler().runTaskLater(this, () -> find(start, 0, 0, 0), 20 * 5);
   }
 
   @Override
   public void onEnable() {
     new SizeGui();
+
+    saveDefaultConfig();
 
     signalGui = new SignalGui(coordinates, (position, switchPosition) -> Bukkit.getScheduler().runTask(this, () -> {
       Block block = locationPositionMap.get(position).getBlock();
@@ -62,8 +66,6 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
     signalGui.display();
 
     getServer().getPluginManager().registerEvents(this, this);
-
-    Bukkit.getScheduler().runTaskLater(this, () -> find(start, 0, 0, 0), 20 * 5);
   }
 
 
@@ -90,31 +92,7 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
     if (location.getBlock().getType() == Material.RAILS) {
 
       byte data = getData(location.getBlock());
-      PositionData positionData;
-
-      switch (data) {
-        case 0: case 4: case 5:
-          positionData = new RailPositionData(true);
-          break;
-
-        case 2: case 1: case 3:
-          positionData = new RailPositionData(false);
-          break;
-
-        case 7:
-
-        case 9:
-
-        case 6:
-
-        case 8:
-          positionData = new SwitchPositionData(position, data);
-          break;
-
-        default:
-          positionData = new RailPositionData(true);
-          break;
-      }
+      PositionData positionData = new SwitchPositionData(position, data);
 
       coordinates.setPositionData(position, positionData);
       positionData.draw(position, signalGui.getGraphics(), signalGui);
