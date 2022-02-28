@@ -14,14 +14,13 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Rails;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class RailRouteLoader extends JavaPlugin implements Listener {
 
-  private final List<Location> already = new ArrayList<>();
-  Location start = new Location(Bukkit.getWorld("world"), 151, 75, 173);
+  private final Map<Position, Location> locationPositionMap = new HashMap<>();
+  Location start = new Location(Bukkit.getWorld("world"), -165, 77, -501);
   Coordinates coordinates = new Coordinates(new HashMap<>());
 
   private SignalGui signalGui;
@@ -41,14 +40,30 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
     return rails.getData();
   }
 
+  public void launch() {
+    signalGui.setVisible(true);
+  }
+
   @Override
   public void onEnable() {
-    signalGui = new SignalGui(coordinates);
+    new SizeGui();
+
+    signalGui = new SignalGui(coordinates, (position, switchPosition) -> Bukkit.getScheduler().runTask(this, () -> {
+      Block block = locationPositionMap.get(position).getBlock();
+      if (block.getType() != Material.RAILS) return;
+      BlockState state = block.getState();
+      MaterialData data = state.getData();
+      Rails rails = (Rails) data;
+
+      rails.setData(switchPosition);
+      state.setData(data);
+      state.update();
+    }));
     signalGui.display();
 
-    find(start, 0, 0, 0);
-
     getServer().getPluginManager().registerEvents(this, this);
+
+    Bukkit.getScheduler().runTaskLater(this, () -> find(start, 0, 0, 0), 20 * 5);
   }
 
 
@@ -59,26 +74,19 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
 
   private void find(Location start) {
     Bukkit.getScheduler().runTaskLater(this, () -> {
-      find(start, 0, 0, 1);
-      find(start, 1, 0, 0);
-      find(start, 0, 0, -1);
-      find(start, -1, 0, 0);
-
-      find(start, 0, 1, 1);
-      find(start, 1, 1, 0);
-      find(start, 0, 1, -1);
-      find(start, -1, 1, 0);
-
-      find(start, 0, -1, 1);
-      find(start, 1, -1, 0);
-      find(start, 0, -1, -1);
-      find(start, -1, -1, 0);
+      for (int i = -1; i <= 1; i++) {
+        find(start, 0, i, 1);
+        find(start, 1, i, 0);
+        find(start, 0, i, -1);
+        find(start, -1, i, 0);
+      }
     }, 1);
   }
 
   public void find(Location start, int x, int y, int z) {
     Location location = start.clone().add(x, y, z);
-    if (already.contains(location)) return;
+    if (locationPositionMap.containsValue(location)) return;
+    Position position = new Position(location.getBlockX() - this.start.getBlockX(), location.getBlockZ() - this.start.getBlockZ());
     if (location.getBlock().getType() == Material.RAILS) {
 
       byte data = getData(location.getBlock());
@@ -94,19 +102,13 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
           break;
 
         case 7:
-          positionData = new SwitchPositionData(new Position(0, 0), new Position(0, 1));
-          break;
 
         case 9:
-          positionData = new SwitchPositionData(new Position(0, 0), new Position(1, 0));
-          break;
 
         case 6:
-          positionData = new SwitchPositionData(new Position(1, 0), new Position(0, 1));
-          break;
 
         case 8:
-          positionData = new SwitchPositionData(new Position(0, 0), new Position(0, 0));
+          positionData = new SwitchPositionData(position, data);
           break;
 
         default:
@@ -114,13 +116,11 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
           break;
       }
 
-      Position position = new Position(location.getBlockX() - this.start.getBlockX(), location.getBlockZ() - this.start.getBlockZ());
-      System.out.println(position);
       coordinates.setPositionData(position, positionData);
-      positionData.draw(position, signalGui.getGraphics());
+      positionData.draw(position, signalGui.getGraphics(), signalGui);
 
+      locationPositionMap.put(position, location);
       find(location);
-      already.add(location);
     }
   }
 
