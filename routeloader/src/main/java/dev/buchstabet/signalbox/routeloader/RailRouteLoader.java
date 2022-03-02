@@ -1,7 +1,11 @@
 package dev.buchstabet.signalbox.routeloader;
 
-import dev.buchstabet.signalbox.coordinates.*;
+import dev.buchstabet.signalbox.coordinates.Coordinates;
+import dev.buchstabet.signalbox.coordinates.Position;
+import dev.buchstabet.signalbox.coordinates.PositionData;
+import dev.buchstabet.signalbox.coordinates.SwitchPositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,14 +18,19 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.material.Rails;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RailRouteLoader extends JavaPlugin implements Listener {
 
   private final Map<Position, Location> locationPositionMap = new HashMap<>();
   private Location start;
-  private final Coordinates coordinates = new Coordinates(new HashMap<>());
+  private final Coordinates coordinates = new Coordinates(new ConcurrentHashMap<>());
 
   private SignalGui signalGui;
 
@@ -43,14 +52,22 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
   public void launch(Location location) {
     start = location;
     signalGui.setVisible(true);
-    Bukkit.getScheduler().runTaskLater(this, () -> find(start, 0, 0, 0), 20 * 5);
+    find(start, 0, 0, 0);
   }
 
+  @SneakyThrows
   @Override
   public void onEnable() {
-    new SizeGui();
-
     saveDefaultConfig();
+
+    URL url = SignalGui.class.getClassLoader().getResource("icon.png");
+    URLConnection urlConnection = url.openConnection();
+    urlConnection.setUseCaches(false);
+
+    BufferedImage icon = ImageIO.read(urlConnection.getInputStream());
+
+    new SizeGui(icon);
+
 
     signalGui = new SignalGui(coordinates, (position, switchPosition) -> Bukkit.getScheduler().runTask(this, () -> {
       Block block = locationPositionMap.get(position).getBlock();
@@ -62,7 +79,7 @@ public class RailRouteLoader extends JavaPlugin implements Listener {
       rails.setData(switchPosition);
       state.setData(data);
       state.update();
-    }));
+    }), icon);
     signalGui.display();
 
     getServer().getPluginManager().registerEvents(this, this);

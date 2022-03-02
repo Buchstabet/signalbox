@@ -7,10 +7,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class SizeGui extends JFrame {
 
-    public SizeGui() {
+    public SizeGui(BufferedImage icon) {
         super("Coordinaten Größe");
         setSize(500, 130);
         setResizable(false);
@@ -27,6 +28,7 @@ public class SizeGui extends JFrame {
         tfName.setBackground(Color.YELLOW);
         panel.add(tfName);
 
+        setIconImage(icon);
 
         JLabel label2 = new JLabel("Location");
         panel.add(label2);

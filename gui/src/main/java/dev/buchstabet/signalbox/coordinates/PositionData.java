@@ -10,4 +10,8 @@ public interface PositionData {
 
   void handleClick(MouseEvent mouseEvent);
 
+  byte getCurrentSet();
+
+  void set(byte b);
+
 }

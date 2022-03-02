@@ -14,7 +14,7 @@ public class SwitchPositionData implements PositionData {
   private Position from, to;
   private final Position position;
   private byte currentSet;
-
+  private boolean settable;
 
   public SwitchPositionData(Position position, byte currentSet) {
     this.position = position;
@@ -57,33 +57,39 @@ public class SwitchPositionData implements PositionData {
 
   @Override
   public void handleClick(MouseEvent mouseEvent) {
+    if (!settable) return;
     SignalGui instance = SignalGui.getInstance();
-    if (currentSet == 9) {
-      currentSet = 0;
-    } else {
-      currentSet++;
+    switch (currentSet) {
+      case 9:
+        currentSet = 0;
+        break;
+
+      case 1: case 2: case 3: case 4:
+        currentSet = 6;
+        break;
+
+      default:
+        currentSet++;
+        break;
     }
 
     instance.getMinecraftAdapter().setPosition(position, currentSet);
     selectFromAndTo();
+    SignalGui.getInstance().repaint();
+  }
 
-    instance.setVisible(false);
-    instance.setVisible(true);
+  public void set(byte b) {
+    if (!settable) return;
+    currentSet = b;
+    SignalGui instance = SignalGui.getInstance();
+    instance.getMinecraftAdapter().setPosition(position, currentSet);
+    selectFromAndTo();
+    SignalGui.getInstance().repaint();
   }
 
   @Override
   public void draw(Position position, Graphics graphics, JFrame jFrame) {
-    Dimension size = jFrame.getSize();
-
-
-        /*
-        graphics.drawLine(
-                (int) (size.getWidth() / 2 + position.getX() * Coordinates.COORDINATE_SIZE + this.from.getX() * Coordinates.COORDINATE_SIZE),
-                (int) (size.getHeight() / 2 + position.getY() * Coordinates.COORDINATE_SIZE + this.from.getY() * Coordinates.COORDINATE_SIZE),
-                (int) (size.getWidth() / 2 + position.getX() * Coordinates.COORDINATE_SIZE + this.to.getX() * Coordinates.COORDINATE_SIZE),
-                (int) (size.getHeight() / 2 + position.getY() * Coordinates.COORDINATE_SIZE + this.to.getY() * Coordinates.COORDINATE_SIZE));d
-         */
-    Position coordinate = position.toCoordinate(jFrame);
+    Position coordinate = position.toCoordinate();
 
     int startX = 0;
     int startY = 0;
@@ -104,19 +110,20 @@ public class SwitchPositionData implements PositionData {
         railPosition = RailPosition.VERTICAL;
         break;
 
-      case 2:
-        graphics.setColor(Color.GREEN);
+      case 3:
+        graphics.setColor(Color.RED);
         railPosition = RailPosition.HORIZONTAL;
         break;
 
-      case 3:
-        graphics.setColor(Color.RED);
+      case 2:
+        graphics.setColor(Color.GREEN);
         railPosition = RailPosition.HORIZONTAL;
         break;
 
       default:
         railPosition = RailPosition.getFromId(currentSet).orElse(null);
         graphics.setColor(Color.BLACK);
+        settable = true;
         break;
     }
 
@@ -172,10 +179,12 @@ public class SwitchPositionData implements PositionData {
 
     graphics.drawLine(startX, startY, targetX, targetY);
 
-    graphics.setColor(Color.BLUE);
-    Graphics2D g2d = (Graphics2D) graphics;
-    g2d.fillRect((int) size.getWidth() / 2 + position.getX() * Coordinates.COORDINATE_SIZE, (int) size.getHeight() / 2 + position.getY() * Coordinates.COORDINATE_SIZE, 3, 3);
-    graphics.setColor(Color.BLACK);
+    if (settable) {
+      graphics.setColor(Color.BLUE);
+      Graphics2D g2d = (Graphics2D) graphics;
+      g2d.fillRect(coordinate.getX(), coordinate.getY(), 3, 3);
+      graphics.setColor(Color.BLACK);
+    }
   }
 
 }
