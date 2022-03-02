@@ -1,17 +1,19 @@
 package dev.buchstabet.signalbox.coordinates;
 
-import javax.swing.*;
+import dev.buchstabet.signalbox.gui.SignalGui;
+
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public interface PositionData {
 
-  void draw(Position position, Graphics graphics, JFrame jFrame);
+  void draw(Position position, Graphics graphics, SignalGui jFrame);
 
-  void handleClick(MouseEvent mouseEvent);
+  void handleClick();
 
   byte getCurrentSet();
 
   void set(byte b);
+
+  Position getPosition();
 
 }

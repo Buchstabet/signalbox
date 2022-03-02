@@ -19,6 +19,9 @@ public class SignalMouseListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (true)
+            return;
+
         Position position = Position.fromXY(e.getX(), e.getY());
 
         if (signalGui.getCoordinates().getPositions().keySet().stream().noneMatch(position1 -> position1.getX() == position.getX() && position1.getY() == position.getY())) return;

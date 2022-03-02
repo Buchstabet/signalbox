@@ -1,8 +1,8 @@
 package dev.buchstabet.signalbox.coordinates;
 
+import dev.buchstabet.signalbox.gui.SignalGui;
 import lombok.RequiredArgsConstructor;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class Coordinates {
     positions.putIfAbsent(position, data);
   }
 
-  public void draw(Graphics graphics, JFrame jFrame) {
+  public void draw(Graphics graphics, SignalGui jFrame) {
     positions.forEach((position, data) -> data.draw(position, graphics, jFrame));
   }
 

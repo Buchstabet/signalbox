@@ -41,7 +41,6 @@ public class SizeGui extends JFrame {
         setVisible(true);
 
         JButton buttonOK = new JButton("OK");
-
         buttonOK.addActionListener(e -> {
             // config.set("location", tfName2.getText());
             // config.set("size", tfName.getText());

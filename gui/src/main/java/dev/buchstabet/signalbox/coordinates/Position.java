@@ -24,10 +24,10 @@ public class Position {
   }
 
   private static int calculate(int input, double windowSize, int move) {
-    int maxFields = (int) Math.floor(windowSize / (double) Coordinates.COORDINATE_SIZE);
+    int maxFields = (int) Math.floor(windowSize / (double) Coordinates.COORDINATE_SIZE) + move / Coordinates.COORDINATE_SIZE;
 
     for (int i = 0; i < maxFields; i++) {
-      if (input <= (Coordinates.COORDINATE_SIZE * i + move)) {
+      if (input <= Coordinates.COORDINATE_SIZE * i) {
         return i - 1;
       }
     }
