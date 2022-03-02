@@ -50,6 +50,9 @@ public class SignalGui extends JFrame {
     public void display() {
         setTitle("Signalbox");
         setSize(1700, 900);
+        getContentPane().setBackground(Color.BLACK);
+
+
         Position.xMove = calculateSize(barHorizontal.getValue());
         Position.yMove = calculateSize(barVertical.getValue());
 

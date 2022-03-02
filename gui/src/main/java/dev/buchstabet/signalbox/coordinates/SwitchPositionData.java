@@ -3,6 +3,7 @@ package dev.buchstabet.signalbox.coordinates;
 import dev.buchstabet.signalbox.gui.SignalGui;
 import dev.buchstabet.signalbox.pathfinder.PathfinderAlgorithm;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,8 @@ public class SwitchPositionData implements PositionData {
     private byte currentSet;
     private boolean settable;
     private final JButton button;
+
+    @Setter private boolean set;
 
     public SwitchPositionData(Position position, byte currentSet) {
         this.position = position;
@@ -124,28 +127,19 @@ public class SwitchPositionData implements PositionData {
 
         switch (currentSet) {
             case 5:
-                graphics.setColor(Color.GREEN);
-                railPosition = RailPosition.VERTICAL;
-                break;
 
             case 4:
-                graphics.setColor(Color.RED);
                 railPosition = RailPosition.VERTICAL;
                 break;
 
             case 3:
-                graphics.setColor(Color.RED);
-                railPosition = RailPosition.HORIZONTAL;
-                break;
 
             case 2:
-                graphics.setColor(Color.GREEN);
                 railPosition = RailPosition.HORIZONTAL;
                 break;
 
             default:
                 railPosition = RailPosition.getFromId(currentSet).orElse(null);
-                graphics.setColor(Color.BLACK);
                 settable = true;
                 break;
         }
@@ -200,16 +194,11 @@ public class SwitchPositionData implements PositionData {
                 break;
         }
 
+        graphics.setColor(set ? Color.RED : Color.GREEN);
         graphics.drawLine(startX, startY, targetX, targetY);
+        graphics.setColor(Color.BLACK);
 
         if (settable) {
-      /*
-      graphics.setColor(Color.BLUE);
-      Graphics2D g2d = (Graphics2D) graphics;
-      g2d.fillRect(coordinate.getX(), coordinate.getY(), 3, 3);
-      graphics.setColor(Color.BLACK);
-       */
-
             button.setBounds(coordinate.getX(), coordinate.getY(), 10, 10);
             button.repaint();
         }

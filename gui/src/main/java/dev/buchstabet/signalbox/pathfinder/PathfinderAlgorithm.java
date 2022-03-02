@@ -27,6 +27,7 @@ public class PathfinderAlgorithm {
             run();
         }
 
+        if (foundTarget == null) return;
 
         SignalGui.getInstance().getGraphics().setColor(Color.BLUE);
         while (foundTarget.getFrom() != null) {
@@ -52,7 +53,7 @@ public class PathfinderAlgorithm {
             PositionData toData = to.get();
 
             throughData.set(fromToCheck(fromData.getPosition(), throughData.getPosition(), toData.getPosition()));
-
+            throughData.setSet(true);
         }
 
         SignalGui.getInstance().getGraphics().setColor(Color.BLACK);
@@ -116,6 +117,8 @@ public class PathfinderAlgorithm {
                 || closedList.stream().anyMatch(pathPosition -> pathPosition.getX() == position.getX() && pathPosition.getY() == position.getY()))
             return;
 
+        Optional<PositionData> any = coordinates.getPositions().keySet().stream().filter(position1 -> position1.equals(position)).map(position1 -> coordinates.getPositions().get(position1)).findAny();
+        if (any.isPresent() && any.get().isSet()) return;
 
         if (coordinates.getPositions().keySet().stream().anyMatch(position1 -> position.getX() == position1.getX() && position.getY() == position1.getY())) {
             openList.add(new PathPosition(position.getX(), position.getY(), from, calculateDistance(position, target)));

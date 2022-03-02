@@ -15,7 +15,7 @@ public class SizeGui extends JFrame {
         super("Coordinaten Größe");
         setSize(500, 130);
         setResizable(false);
-
+        getContentPane().setBackground(Color.BLACK);
 
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Größe");

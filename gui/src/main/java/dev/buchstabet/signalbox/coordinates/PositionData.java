@@ -14,6 +14,10 @@ public interface PositionData {
 
   void set(byte b);
 
+  void setSet(boolean b);
+
+  boolean isSet();
+
   Position getPosition();
 
 }
