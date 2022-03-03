@@ -1,5 +1,7 @@
 package dev.buchstabet.signalbox.coordinates;
 
+import org.bukkit.Material;
+
 import java.awt.*;
 
 public interface PositionData {
@@ -25,5 +27,7 @@ public interface PositionData {
   void setOccupied(boolean b);
 
   boolean isOccupied();
+
+  Material getMaterial();
 
 }

@@ -94,6 +94,7 @@ public class SwitchPositionData implements PositionData {
     public void draw(Position position, Graphics graphics) {
         Position coordinate = position.toCoordinate();
         if (hasButton) {
+            button.setBackground(occupied ? Color.RED : set ? Color.GREEN : Color.YELLOW);
             button.setBounds(coordinate.getX(), coordinate.getY(), Coordinates.COORDINATE_SIZE, Coordinates.COORDINATE_SIZE);
         } else {
 

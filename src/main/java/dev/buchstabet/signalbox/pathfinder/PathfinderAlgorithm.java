@@ -102,7 +102,7 @@ public class PathfinderAlgorithm {
     private void run() {
         lastBest = getBest();
         openList.remove(lastBest);
-        if (lastBest.getDistance() == 0D) {
+        if (lastBest.equals(target)) {
             foundTarget = lastBest;
             return;
         }
@@ -141,7 +141,7 @@ public class PathfinderAlgorithm {
         PathPosition pathPosition = openList.get(0);
         for (int i = 1; i < openList.size(); i++) {
             PathPosition position = openList.get(i);
-            if (pathPosition.getDistance() > position.getDistance()) pathPosition = position;
+            if (pathPosition.getTotalPrice() > position.getTotalPrice()) pathPosition = position;
         }
         return pathPosition;
     }
