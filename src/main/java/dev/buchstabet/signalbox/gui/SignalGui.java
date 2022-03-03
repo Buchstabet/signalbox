@@ -2,7 +2,10 @@ package dev.buchstabet.signalbox.gui;
 
 import dev.buchstabet.signalbox.coordinates.Coordinates;
 import dev.buchstabet.signalbox.coordinates.Position;
-import dev.buchstabet.signalbox.helpbuttons.FHT;
+import dev.buchstabet.signalbox.helpbuttons.FRT;
+import dev.buchstabet.signalbox.helpbuttons.FfRT;
+import dev.buchstabet.signalbox.helpbuttons.Start;
+import dev.buchstabet.signalbox.log.LogFrame;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -23,9 +26,11 @@ public class SignalGui extends JFrame {
   private final JScrollBar barHorizontal = new JScrollBar(JScrollBar.HORIZONTAL, 250, 20, 0, 500);
 
   private final JPanel panel;
-  private final FHT fht;
+  private final FRT FRT;
+  private final FfRT FfRT;
+  private final Start start;
   private final JTextField jTextField = new JTextField("Zoom: " + Coordinates.COORDINATE_SIZE);
-
+  private final LogFrame logFrame = new LogFrame();
 
   public SignalGui(Coordinates coordinates, BufferedImage icon) {
     this.coordinates = coordinates;
@@ -35,7 +40,7 @@ public class SignalGui extends JFrame {
     this.icon = icon;
 
     jTextField.setEditable(false);
-    jTextField.setBackground(Color.white);
+    logFrame.setEditable(false);
 
     setTitle("Signalbox");
     setSize(1700, 900);
@@ -93,8 +98,19 @@ public class SignalGui extends JFrame {
     jTextField.setBackground(Color.YELLOW);
     jTextField.setHorizontalAlignment(JTextField.CENTER);
 
-    fht = new FHT(50, 85, "FHT");
-    panel.add(fht);
+    FRT = new FRT(50, 85, "FRT");
+    panel.add(FRT);
+
+    FfRT = new FfRT(50, 120, "FfRT");
+    panel.add(FfRT);
+
+    start = new Start(50, 155, "Start");
+    panel.add(start);
+
+    panel.add(logFrame);
+    logFrame.setBackground(Color.yellow);
+    // logFrame.setHorizontalAlignment(JTextField.CENTER);
+
   }
 
   public int calculateSize(int value) {
@@ -106,6 +122,7 @@ public class SignalGui extends JFrame {
   public void paint(Graphics g) {
     super.paint(g);
     panel.setBounds(0, 0, barVertical.getX(), barHorizontal.getY());
+    logFrame.setBounds(panel.getWidth() - 210, 10, 200, 305);
     coordinates.draw(panel.getGraphics());
   }
 }

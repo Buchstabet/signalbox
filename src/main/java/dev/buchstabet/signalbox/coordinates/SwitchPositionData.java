@@ -1,7 +1,8 @@
 package dev.buchstabet.signalbox.coordinates;
 
 import dev.buchstabet.signalbox.gui.SignalGui;
-import dev.buchstabet.signalbox.helpbuttons.FHT;
+import dev.buchstabet.signalbox.helpbuttons.FRT;
+import dev.buchstabet.signalbox.pathfinder.PathPosition;
 import dev.buchstabet.signalbox.pathfinder.PathfinderAlgorithm;
 import dev.buchstabet.signalbox.switchmanager.SwitchManager;
 import lombok.Getter;
@@ -11,12 +12,13 @@ import org.bukkit.Material;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.Objects;
 
 @Getter
 public class SwitchPositionData implements PositionData {
 
-    private static Position start = null;
+    public static Position start = null;
 
     private final Position position;
     private byte currentSet;
@@ -38,8 +40,8 @@ public class SwitchPositionData implements PositionData {
             button.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (FHT.pressed) {
-                        FHT.fht(position);
+                    if (FRT.pressed) {
+                        FRT.frt(position);
                     } else handleClick();
                 }
             });
@@ -50,7 +52,7 @@ public class SwitchPositionData implements PositionData {
     }
 
     private void handleSettable() {
-        if (material != Material.RAILS) settable = false;
+        if (material != Material.RAILS) return;
         switch (currentSet) {
             case 5: case 2: case 3: case 4:
                 settable = false;
@@ -63,40 +65,16 @@ public class SwitchPositionData implements PositionData {
 
     @Override
     public void handleClick() {
-        if (start == null)
+        if (start == null) {
+            SignalGui.getInstance().getLogFrame().log("Start was set");
             start = position;
-        else {
-            new PathfinderAlgorithm(start, position, SignalGui.getInstance().getCoordinates()).paintBestWay();
+            SignalGui.getInstance().getStart().setBackground(Color.RED);
+        } else {
+            Collection<PathPosition> pathPositions = new PathfinderAlgorithm(start, position, SignalGui.getInstance().getCoordinates()).paintBestWay();
             start = null;
+            SignalGui.getInstance().getStart().setBackground(Color.GREEN);
+            SignalGui.getInstance().getLogFrame().log(pathPositions.isEmpty() ? "No rail route found" : "Rail route found");
         }
-
-
-        /*
-
-        Code to change the setting of the switch
-
-        SignalGui instance = SignalGui.getInstance();
-        switch (currentSet) {
-            case 9:
-                currentSet = 0;
-                break;
-
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                currentSet = 6;
-                break;
-
-            default:
-                currentSet++;
-                break;
-        }
-
-        instance.getMinecraftAdapter().setPosition(position, currentSet);
-        selectFromAndTo();
-        SignalGui.getInstance().repaint();
-         */
     }
 
     @Override
@@ -177,7 +155,7 @@ public class SwitchPositionData implements PositionData {
                     break;
             }
 
-            graphics.setColor(occupied ? Color.RED : set ? Color.GREEN : settable ? Color.YELLOW : Color.MAGENTA);
+            graphics.setColor(occupied ? Color.RED : set ? Color.GREEN : Color.YELLOW);
             graphics.drawLine(startX, startY, targetX, targetY);
         }
     }

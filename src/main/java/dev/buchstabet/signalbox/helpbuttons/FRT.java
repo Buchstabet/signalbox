@@ -11,11 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class FHT extends HelpButton {
+public class FRT extends HelpButton {
 
   public static boolean pressed;
 
-  public FHT(int x, int y, String text) {
+  public FRT(int x, int y, String text) {
     super(x, y, text);
     setBackground(Color.GREEN);
   }
@@ -24,17 +24,19 @@ public class FHT extends HelpButton {
   public void actionPerformed(ActionEvent e) {
     pressed = !pressed;
     setBackground(pressed ? Color.RED : Color.GREEN);
+
+    SignalGui.getInstance().getLogFrame().log("FRT was pressed");
   }
 
-  public static void fht(Position position) {
-    new FHTTask().start(position);
+  public static void frt(Position position) {
+    new FRTTask().start(position);
     pressed = false;
     SignalGui signalGui = SignalGui.getInstance();
-    signalGui.getFht().setBackground(Color.GREEN);
-    signalGui.repaint();
+    signalGui.getFRT().setBackground(Color.GREEN);
+    SignalGui.getInstance().getLogFrame().log("FRT was used");
   }
 
-  private static class FHTTask {
+  private static class FRTTask {
 
     private final LinkedList<Position> left = new LinkedList<>();
     private final List<Position> closed = new ArrayList<>();
@@ -61,6 +63,7 @@ public class FHT extends HelpButton {
       if (data.isPresent()) {
         if (data.get().isSet()) {
           data.get().setSet(false);
+          data.get().draw(data.get().getPosition(), SignalGui.getInstance().getPanel().getGraphics());
         } else return;
       } else return;
 

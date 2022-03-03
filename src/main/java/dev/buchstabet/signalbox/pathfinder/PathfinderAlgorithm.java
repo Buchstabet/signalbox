@@ -4,11 +4,12 @@ import dev.buchstabet.signalbox.coordinates.Coordinates;
 import dev.buchstabet.signalbox.coordinates.Position;
 import dev.buchstabet.signalbox.coordinates.PositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
+import dev.buchstabet.signalbox.helpbuttons.FfRT;
 import lombok.RequiredArgsConstructor;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class PathfinderAlgorithm {
@@ -16,8 +17,9 @@ public class PathfinderAlgorithm {
     private final Position start, target;
     private final LinkedList<PathPosition> openList = new LinkedList<>(), closedList = new LinkedList<>();
     private final Coordinates coordinates;
-
     private PathPosition foundTarget;
+    private boolean frt;
+    private PathPosition lastBest;
 
     public Collection<PathPosition> paintBestWay() {
         List<PathPosition> positions = new ArrayList<>();
@@ -61,7 +63,9 @@ public class PathfinderAlgorithm {
 
             throughData.set(fromToCheck(fromData.getPosition(), throughData.getPosition(), toData.getPosition()));
         }
-
+        if (frt) {
+            SignalGui.getInstance().getFfRT().use();
+        }
         return positions;
     }
 
@@ -96,19 +100,19 @@ public class PathfinderAlgorithm {
     }
 
     private void run() {
-        PathPosition position = getBest();
-        openList.remove(position);
-        if (position.getDistance() == 0D) {
-            foundTarget = position;
+        lastBest = getBest();
+        openList.remove(lastBest);
+        if (lastBest.getDistance() == 0D) {
+            foundTarget = lastBest;
             return;
         }
 
-        closedList.add(position);
+        closedList.add(lastBest);
 
-        check(new Position(position.getX() + 1, position.getY()), position);
-        check(new Position(position.getX() - 1, position.getY()), position);
-        check(new Position(position.getX(), position.getY() + 1), position);
-        check(new Position(position.getX(), position.getY() - 1), position);
+        check(new Position(lastBest.getX() + 1, lastBest.getY()), lastBest);
+        check(new Position(lastBest.getX() - 1, lastBest.getY()), lastBest);
+        check(new Position(lastBest.getX(), lastBest.getY() + 1), lastBest);
+        check(new Position(lastBest.getX(), lastBest.getY() - 1), lastBest);
     }
 
     private void check(Position position, PathPosition from) {
@@ -120,8 +124,14 @@ public class PathfinderAlgorithm {
         if (coordinates.getPositions().keySet().stream().anyMatch(position1 -> position.getX() == position1.getX() && position.getY() == position1.getY())) {
             if (coordinates.getPositions().keySet().stream().anyMatch(position1 -> position.getX() == position1.getX() && position.getY() == position1.getY())) {
                 Optional<PositionData> positionData = position.getPositionData();
-                if (positionData.isPresent() && (positionData.get().isSet() || positionData.get().isOccupied())) return;
-
+                if (positionData.isPresent()) {
+                    if (positionData.get().isSet()) return;
+                    if (positionData.get().isOccupied()) {
+                        if (FfRT.pressed) {
+                            frt = true;
+                        } else return;
+                    }
+                } else return;
                 openList.add(new PathPosition(position.getX(), position.getY(), from, calculateDistance(position, target)));
             }
         }

@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -34,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Signalbox extends JavaPlugin implements Listener {
 
   @Getter private final Map<Position, Location> locationPositionMap = new HashMap<>();
+  @Getter private final Map<Location, Position> locationMap = new HashMap<>();
   private Location start;
   private final Coordinates coordinates = new Coordinates(new ConcurrentHashMap<>());
   private SignalGui signalGui;
@@ -80,10 +82,12 @@ public class Signalbox extends JavaPlugin implements Listener {
     }
 
     start.getWorld().getEntities().forEach(entity -> {
-      if (locationPositionMap.containsValue(entity.getLocation().getBlock().getLocation())) {
-        new ArrayList<>(locationPositionMap.keySet()).stream().filter(position -> locationPositionMap.get(position).equals(entity.getLocation().getBlock().getLocation())).forEach(position -> {
-          position.getPositionData().ifPresent(data -> data.setOccupied(true));
-        });
+      if (!(entity instanceof Minecart)) return;
+
+      if (locationMap.containsKey(entity.getLocation().getBlock().getLocation())) {
+        new ArrayList<>(locationMap.keySet()).stream()
+                .filter(position -> position.equals(entity.getLocation().getBlock().getLocation()))
+                .forEach(position -> locationMap.get(position).getPositionData().ifPresent(data -> data.setOccupied(true)));
       }
     });
     getServer().getPluginManager().registerEvents(new TrackVacancyDetectionSystem(), this);
@@ -103,7 +107,7 @@ public class Signalbox extends JavaPlugin implements Listener {
 
     if (!location.getChunk().isLoaded()) location.getChunk().load(false);
 
-    if (locationPositionMap.containsValue(location)) return;
+    if (locationMap.containsKey(location)) return;
     Position position = new Position(location.getBlockX() - this.start.getBlockX(), location.getBlockZ() - this.start.getBlockZ());
     if (location.getBlock().getType() == Material.RAILS
             || location.getBlock().getType() == Material.DETECTOR_RAIL
@@ -113,6 +117,7 @@ public class Signalbox extends JavaPlugin implements Listener {
       byte data = getData(location.getBlock());
       PositionData positionData = new SwitchPositionData(position, data, location.getBlock().getType() == Material.DETECTOR_RAIL, location.getBlock().getType());
       coordinates.setPositionData(position, positionData);
+      locationMap.put(location, position);
       locationPositionMap.put(position, location);
 
       for (int i = -1; i <= 1; i++) {
