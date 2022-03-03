@@ -1,0 +1,5 @@
+main: dev.buchstabet.signalbox.Signalbox
+version: ${project.version}
+name: ${project.artifactId}
+load: POSTWORLD
+author: Buchstabet
