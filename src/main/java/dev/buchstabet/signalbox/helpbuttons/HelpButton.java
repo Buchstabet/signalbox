@@ -15,7 +15,7 @@ public abstract class HelpButton extends JButton implements ActionListener {
     this.x = x;
     this.y = y;
 
-    setBounds(x, y, 70, 30);
+    setBounds(x, y, 130, 30);
   }
 
   @Override

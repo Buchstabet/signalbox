@@ -1,12 +1,14 @@
 package dev.buchstabet.signalbox.coordinates;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Minecart;
 
 import java.awt.*;
 
 public interface PositionData {
 
-  void draw(Position position, Graphics graphics);
+  void draw(Graphics graphics);
 
   void handleClick();
 
@@ -24,10 +26,23 @@ public interface PositionData {
 
   void setSettable(boolean b);
 
-  void setOccupied(boolean b);
+  void setOccupied(Minecart minecart);
 
   boolean isOccupied();
 
+  Location getLocation();
+
   Material getMaterial();
+
+  default void handleSettable() {
+    if (getMaterial() != Material.RAILS) return;
+    switch (getCurrentSet()) {
+      case 5: case 2: case 3: case 4:
+        setSettable(false);
+        break;
+      default:
+        setSettable(true);
+    }
+  }
 
 }

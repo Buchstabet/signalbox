@@ -2,7 +2,10 @@ package dev.buchstabet.signalbox.trackvacancydetectionsystem;
 
 import dev.buchstabet.signalbox.Signalbox;
 import dev.buchstabet.signalbox.coordinates.Position;
+import dev.buchstabet.signalbox.coordinates.StartPositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
+import dev.buchstabet.signalbox.signal.SignalPosition;
+import lombok.Data;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Vehicle;
@@ -11,10 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.util.Vector;
 
 // Gleisfreimeldeanlage
 public class TrackVacancyDetectionSystem implements Listener {
-
 
   @EventHandler(ignoreCancelled = true)
   public void onVehicleMove(VehicleMoveEvent event) {
@@ -27,8 +30,8 @@ public class TrackVacancyDetectionSystem implements Listener {
       if (position != null) {
         position.getPositionData().ifPresent(data -> {
           if (data.isOccupied()) {
-            data.setOccupied(false);
-            data.draw(position, SignalGui.getInstance().getPanel().getGraphics());
+            data.setOccupied(null);
+            data.draw(SignalGui.getInstance().getPanel().getGraphics());
           }
         });
       }
@@ -40,8 +43,13 @@ public class TrackVacancyDetectionSystem implements Listener {
       if (position != null) {
         position.getPositionData().ifPresent(data -> {
           if (!data.isOccupied()){
-            data.setOccupied(true);
-            data.draw(position, SignalGui.getInstance().getPanel().getGraphics());
+            data.setOccupied((Minecart) vehicle);
+            data.draw(SignalGui.getInstance().getPanel().getGraphics());
+          }
+          if (data instanceof StartPositionData) {
+            StartPositionData startPositionData = (StartPositionData) data;
+            if (startPositionData.getSignal() == SignalPosition.STOP)
+              vehicle.setVelocity(new Vector(0, 0, 0));
           }
         });
       }
@@ -49,15 +57,6 @@ public class TrackVacancyDetectionSystem implements Listener {
 
   }
 
-
-  /*
-
-
-  |
-  |    funktioniert nicht
-  \/
-
-   */
 
   @EventHandler(ignoreCancelled = true)
   public void onEntitySpawn(VehicleCreateEvent event) {
@@ -70,8 +69,8 @@ public class TrackVacancyDetectionSystem implements Listener {
       if (!data.isOccupied()) {
         SignalGui.getInstance().getLogFrame().log("A vehicle was spawned");
 
-        data.setOccupied(true);
-        data.draw(position, SignalGui.getInstance().getPanel().getGraphics());
+        data.setOccupied((Minecart) vehicle);
+        data.draw(SignalGui.getInstance().getPanel().getGraphics());
       }
     });
   }
@@ -86,9 +85,16 @@ public class TrackVacancyDetectionSystem implements Listener {
     position.getPositionData().ifPresent(data -> {
       if (data.isOccupied()) {
         SignalGui.getInstance().getLogFrame().log("A vehicle was killed");
-        data.setOccupied(false);
-        data.draw(position, SignalGui.getInstance().getPanel().getGraphics());
+        data.setOccupied(null);
+        data.draw(SignalGui.getInstance().getPanel().getGraphics());
       }
     });
+  }
+
+  @Data
+  private static class StoppedMinecart {
+    private final Minecart minecart;
+    private final Vector vector;
+    private final StartPositionData startPositionData;
   }
 }

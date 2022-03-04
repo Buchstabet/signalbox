@@ -1,12 +1,8 @@
 package dev.buchstabet.signalbox.pathfinder;
 
 import dev.buchstabet.signalbox.coordinates.Position;
-import dev.buchstabet.signalbox.coordinates.PositionData;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class PathPosition extends Position {
 
@@ -35,12 +31,6 @@ public class PathPosition extends Position {
   }
 
   private int getPrice() {
-    Optional<PositionData> positionData = getPositionData();
-    if (positionData.isPresent()) {
-      if (positionData.get().getMaterial() == Material.RAILS)
-        return 1;
-    }
-
-    return 2;
+    return 1;
   }
 }

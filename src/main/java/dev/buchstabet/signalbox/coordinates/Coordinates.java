@@ -34,7 +34,7 @@ public class Coordinates {
   }
 
   public void draw(Graphics graphics) {
-    positions.forEach((position, data) -> data.draw(position, graphics));
+    positions.forEach((position, data) -> data.draw(graphics));
   }
 
 }

@@ -2,7 +2,9 @@ package dev.buchstabet.signalbox.helpbuttons;
 
 import dev.buchstabet.signalbox.coordinates.Position;
 import dev.buchstabet.signalbox.coordinates.PositionData;
+import dev.buchstabet.signalbox.coordinates.StartPositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
+import dev.buchstabet.signalbox.signal.SignalPosition;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -47,6 +49,8 @@ public class FRT extends HelpButton {
       while (!left.isEmpty()) {
         handlePosition();
       }
+
+      position.getPositionData().ifPresent(data -> data.draw(SignalGui.getInstance().getPanel().getGraphics()));
     }
 
     private void checkPosition(Position position) {
@@ -61,9 +65,9 @@ public class FRT extends HelpButton {
       closed.add(position);
       Optional<PositionData> data = position.getPositionData();
       if (data.isPresent()) {
-        if (data.get().isSet()) {
+        if (data.get().isSet() || data.get() instanceof StartPositionData && ((StartPositionData) data.get()).getSignal().equals(SignalPosition.DRIVE)) {
           data.get().setSet(false);
-          data.get().draw(data.get().getPosition(), SignalGui.getInstance().getPanel().getGraphics());
+          data.get().draw(SignalGui.getInstance().getPanel().getGraphics());
         } else return;
       } else return;
 
@@ -71,7 +75,8 @@ public class FRT extends HelpButton {
     }
 
     private void check(Position position) {
-      if (closed.stream().anyMatch(position1 -> position1.getX() == position.getX() && position1.getY() == position.getY())) {
+      Optional<PositionData> positionData = position.getPositionData();
+      if (!(positionData.isPresent() && positionData.get() instanceof StartPositionData) && closed.stream().anyMatch(position1 -> position1.getX() == position.getX() && position1.getY() == position.getY())) {
         return;
       }
 

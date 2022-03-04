@@ -4,6 +4,7 @@ import dev.buchstabet.signalbox.coordinates.Coordinates;
 import dev.buchstabet.signalbox.coordinates.Position;
 import dev.buchstabet.signalbox.helpbuttons.FRT;
 import dev.buchstabet.signalbox.helpbuttons.FfRT;
+import dev.buchstabet.signalbox.helpbuttons.Reload;
 import dev.buchstabet.signalbox.helpbuttons.Start;
 import dev.buchstabet.signalbox.log.LogFrame;
 import lombok.Getter;
@@ -94,7 +95,7 @@ public class SignalGui extends JFrame {
     // addMouseWheelListener(e -> Coordinates.COORDINATE_SIZE = Math.max(Coordinates.COORDINATE_SIZE + e.getWheelRotation(), 5));
 
     panel.add(jTextField);
-    jTextField.setBounds(50, 50, 70, 30);
+    jTextField.setBounds(50, 50, 130, 30);
     jTextField.setBackground(Color.YELLOW);
     jTextField.setHorizontalAlignment(JTextField.CENTER);
 
@@ -106,6 +107,9 @@ public class SignalGui extends JFrame {
 
     start = new Start(50, 155, "Start");
     panel.add(start);
+
+    Reload reload = new Reload(50, 190, "Reload");
+    panel.add(reload);
 
     panel.add(logFrame);
     logFrame.setBackground(Color.yellow);
@@ -122,7 +126,7 @@ public class SignalGui extends JFrame {
   public void paint(Graphics g) {
     super.paint(g);
     panel.setBounds(0, 0, barVertical.getX(), barHorizontal.getY());
-    logFrame.setBounds(panel.getWidth() - 210, 10, 200, 305);
+    logFrame.setBounds(50, panel.getHeight() - 355, 150, 305);
     coordinates.draw(panel.getGraphics());
   }
 }

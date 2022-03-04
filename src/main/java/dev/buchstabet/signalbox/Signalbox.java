@@ -1,9 +1,6 @@
 package dev.buchstabet.signalbox;
 
-import dev.buchstabet.signalbox.coordinates.Coordinates;
-import dev.buchstabet.signalbox.coordinates.Position;
-import dev.buchstabet.signalbox.coordinates.PositionData;
-import dev.buchstabet.signalbox.coordinates.SwitchPositionData;
+import dev.buchstabet.signalbox.coordinates.*;
 import dev.buchstabet.signalbox.gui.SignalGui;
 import dev.buchstabet.signalbox.trackvacancydetectionsystem.TrackVacancyDetectionSystem;
 import lombok.Getter;
@@ -40,6 +37,8 @@ public class Signalbox extends JavaPlugin implements Listener {
   private final Coordinates coordinates = new Coordinates(new ConcurrentHashMap<>());
   private SignalGui signalGui;
   private final List<Location> toLoad = new ArrayList<>();
+
+  // Automatisch alle geraden in Strom schienen verwandeln und powern
 
   @EventHandler(ignoreCancelled = true)
   public void onPlayerInteract(PlayerInteractEvent event) {
@@ -87,7 +86,7 @@ public class Signalbox extends JavaPlugin implements Listener {
       if (locationMap.containsKey(entity.getLocation().getBlock().getLocation())) {
         new ArrayList<>(locationMap.keySet()).stream()
                 .filter(position -> position.equals(entity.getLocation().getBlock().getLocation()))
-                .forEach(position -> locationMap.get(position).getPositionData().ifPresent(data -> data.setOccupied(true)));
+                .forEach(position -> locationMap.get(position).getPositionData().ifPresent(data -> data.setOccupied((Minecart) entity)));
       }
     });
     getServer().getPluginManager().registerEvents(new TrackVacancyDetectionSystem(), this);
@@ -115,7 +114,12 @@ public class Signalbox extends JavaPlugin implements Listener {
             || location.getBlock().getType() == Material.POWERED_RAIL) {
 
       byte data = getData(location.getBlock());
-      PositionData positionData = new SwitchPositionData(position, data, location.getBlock().getType() == Material.DETECTOR_RAIL, location.getBlock().getType());
+      PositionData positionData;
+      if (location.getBlock().getType() == Material.DETECTOR_RAIL) {
+        positionData = new StartPositionData(position, data, location.getBlock().getType(), location);
+      } else {
+        positionData = new RailPositionData(position, data, location.getBlock().getType(), location);
+      }
       coordinates.setPositionData(position, positionData);
       locationMap.put(location, position);
       locationPositionMap.put(position, location);
