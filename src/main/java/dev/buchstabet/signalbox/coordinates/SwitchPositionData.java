@@ -94,7 +94,7 @@ public class SwitchPositionData implements PositionData {
     Position coordinate = position.toCoordinate();
 
     setButtonColor();
-    button.setBounds((int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.4), (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.4), (int) (Coordinates.COORDINATE_SIZE * 0.2), (int) (Coordinates.COORDINATE_SIZE * 0.2));
+    button.setBounds(coordinate.getX(), coordinate.getY(), Coordinates.COORDINATE_SIZE, Coordinates.COORDINATE_SIZE);
 
   }
 

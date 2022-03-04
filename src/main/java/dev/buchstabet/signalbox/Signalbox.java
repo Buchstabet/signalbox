@@ -109,6 +109,7 @@ public class Signalbox extends JavaPlugin implements Listener {
         Location location = toLoad.remove(0);
 
         if (!location.getChunk().isLoaded()) location.getChunk().load(false);
+        if (!location.getChunk().isForceLoaded()) location.getChunk().setForceLoaded(true);
 
         if (locationMap.containsKey(location)) return;
         Position position = new Position(location.getBlockX() - this.start.getBlockX(), location.getBlockZ() - this.start.getBlockZ());
