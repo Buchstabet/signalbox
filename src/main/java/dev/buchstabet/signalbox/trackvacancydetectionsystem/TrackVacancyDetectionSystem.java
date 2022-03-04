@@ -2,9 +2,8 @@ package dev.buchstabet.signalbox.trackvacancydetectionsystem;
 
 import dev.buchstabet.signalbox.Signalbox;
 import dev.buchstabet.signalbox.coordinates.Position;
-import dev.buchstabet.signalbox.coordinates.StartPositionData;
+import dev.buchstabet.signalbox.coordinates.SignalPositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
-import dev.buchstabet.signalbox.signal.SignalPosition;
 import lombok.Data;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -46,9 +45,9 @@ public class TrackVacancyDetectionSystem implements Listener {
             data.setOccupied((Minecart) vehicle);
             data.draw(SignalGui.getInstance().getPanel().getGraphics());
           }
-          if (data instanceof StartPositionData) {
-            StartPositionData startPositionData = (StartPositionData) data;
-            if (startPositionData.getSignal() == SignalPosition.STOP)
+          if (data instanceof SignalPositionData) {
+            SignalPositionData signalPositionData = (SignalPositionData) data;
+            if (!signalPositionData.getSignal().canDrive())
               vehicle.setVelocity(new Vector(0, 0, 0));
           }
         });
@@ -95,6 +94,6 @@ public class TrackVacancyDetectionSystem implements Listener {
   private static class StoppedMinecart {
     private final Minecart minecart;
     private final Vector vector;
-    private final StartPositionData startPositionData;
+    private final SignalPositionData signalPositionData;
   }
 }

@@ -5,26 +5,87 @@ import org.bukkit.Material;
 import org.bukkit.entity.Minecart;
 
 import java.awt.*;
+import java.util.Objects;
 
 public interface PositionData {
 
-  void draw(Graphics graphics);
+  default void draw(Graphics graphics) {
+    Position coordinate = getPosition().toCoordinate();
+    int startX = 0;
+    int startY = 0;
 
-  void handleClick();
+    int targetX = 0;
+    int targetY = 0;
+
+    RailPosition railPosition = RailPosition.getFromId(getCurrentSet(), getMaterial());
+
+    switch (Objects.requireNonNull(railPosition)) {
+      case HORIZONTAL:
+        startX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.25);
+        startY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.50);
+
+        targetX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.75);
+        targetY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.50);
+        break;
+
+      case VERTICAL:
+        startX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.50);
+        startY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.25);
+
+        targetX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.50);
+        targetY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.75);
+        break;
+
+      case SOUTH_EAST:
+        startX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.50);
+        startY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.75);
+
+        targetX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.75);
+        targetY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.50);
+        break;
+
+      case NORTH_EAST:
+        startX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.50);
+        startY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.25);
+
+        targetX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.75);
+        targetY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.50);
+        break;
+
+      case SOUTH_WEST:
+        startX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.25);
+        startY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.50);
+
+        targetX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.50);
+        targetY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.75);
+        break;
+
+      case NORTH_WEST:
+        startX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.50);
+        startY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.25);
+
+        targetX = (int) (coordinate.getX() + Coordinates.COORDINATE_SIZE * 0.25);
+        targetY = (int) (coordinate.getY() + Coordinates.COORDINATE_SIZE * 0.50);
+        break;
+    }
+
+    graphics.setColor(getMinecart() != null ? Color.RED : isSet() ? Color.GREEN : Color.YELLOW);
+    graphics.drawLine(startX, startY, targetX, targetY);
+  }
+
+  Minecart getMinecart();
+
+  default void handleClick() {}
 
   byte getCurrentSet();
 
-  void set(byte b);
+  default void set(byte b) {}
 
   void setSet(boolean b);
 
   boolean isSet();
 
   Position getPosition();
-
-  boolean isSettable();
-
-  void setSettable(boolean b);
 
   void setOccupied(Minecart minecart);
 
@@ -34,14 +95,13 @@ public interface PositionData {
 
   Material getMaterial();
 
-  default void handleSettable() {
-    if (getMaterial() != Material.RAILS) return;
+  default boolean isSettable() {
+    if (getMaterial() != Material.RAILS) return false;
     switch (getCurrentSet()) {
       case 5: case 2: case 3: case 4:
-        setSettable(false);
-        break;
+        return false;
       default:
-        setSettable(true);
+        return true;
     }
   }
 

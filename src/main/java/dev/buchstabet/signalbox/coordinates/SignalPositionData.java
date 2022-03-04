@@ -2,7 +2,9 @@ package dev.buchstabet.signalbox.coordinates;
 
 import dev.buchstabet.signalbox.Signalbox;
 import dev.buchstabet.signalbox.gui.SignalGui;
-import dev.buchstabet.signalbox.helpbuttons.FRT;
+import dev.buchstabet.signalbox.helpbuttons.SGT;
+import dev.buchstabet.signalbox.helpbuttons.FHT;
+import dev.buchstabet.signalbox.helpbuttons.HaGT;
 import dev.buchstabet.signalbox.pathfinder.PathPosition;
 import dev.buchstabet.signalbox.pathfinder.PathfinderAlgorithm;
 import dev.buchstabet.signalbox.signal.SignalPosition;
@@ -21,7 +23,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 @Getter
-public class StartPositionData implements PositionData {
+public class SignalPositionData implements PositionData {
 
   public static Position start = null;
 
@@ -35,7 +37,7 @@ public class StartPositionData implements PositionData {
   @Getter private Location next;
   private Minecart minecart;
 
-  public StartPositionData(Position position, byte currentSet, Material material, Location location) {
+  public SignalPositionData(Position position, byte currentSet, Material material, Location location) {
     this.position = position;
     this.currentSet = currentSet;
     this.material = material;
@@ -45,14 +47,20 @@ public class StartPositionData implements PositionData {
     button.addActionListener(new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (FRT.pressed) {
-          FRT.frt(position);
+        if (FHT.pressed) {
+          FHT.frt(position);
+        } else if(SGT.pressed) {
+          setSignalPosition(SignalPosition.BEACON);
+          SignalGui.getInstance().getSGT().use();
+        } else if(HaGT.pressed) {
+          setSignalPosition(SignalPosition.STOP);
+          SignalGui.getInstance().getHaGT().use();
         } else handleClick();
       }
     });
     SignalGui.getInstance().getPanel().add(button);
 
-    handleSettable();
+    this.isSettable();
 
     signal = SignalPosition.STOP;
   }
@@ -101,7 +109,7 @@ public class StartPositionData implements PositionData {
     this.minecart = minecart;
 
     if (!isOccupied()) {
-      signal = SignalPosition.STOP;
+      if (signal == SignalPosition.DRIVE) signal = SignalPosition.STOP;
       next = null;
     } else if (next != null) {
       Bukkit.getScheduler().runTask(JavaPlugin.getPlugin(Signalbox.class), () -> minecart.setVelocity(calculateVelocity(next, minecart.getLocation())));
@@ -113,36 +121,26 @@ public class StartPositionData implements PositionData {
   public void setSet(boolean set) {
     this.set = set;
     if (!set) {
-      signal = SignalPosition.STOP;
+      if (signal == SignalPosition.DRIVE) signal = SignalPosition.STOP;
       next = null;
     }
-  }
-
-  @Override
-  public boolean isSettable() {
-    return false;
-  }
-
-  @Override
-  public void setSettable(boolean b) {
-
-  }
-
-  public void set(byte b) {
-
   }
 
   @Override
   public void draw(Graphics graphics) {
     Position coordinate = position.toCoordinate();
 
-    button.setBackground(isOccupied() ? new Color(182, 0, 12) : signal == SignalPosition.STOP ? new Color(255, 102, 99) : Color.GREEN);
+    setButtonColor();
     button.setBounds(coordinate.getX(), coordinate.getY(), Coordinates.COORDINATE_SIZE, Coordinates.COORDINATE_SIZE);
 
   }
 
+  private void setButtonColor() {
+    button.setBackground(isOccupied() ? Color.cyan : signal == SignalPosition.STOP ? Color.red : signal == SignalPosition.BEACON ? Color.white : Color.GREEN);
+  }
+
   public void setSignalPosition(SignalPosition drive) {
     signal = drive;
-    button.setBackground(isOccupied() ? new Color(182, 0, 12) : signal == SignalPosition.STOP ? new Color(255, 102, 99) : Color.GREEN);
+    setButtonColor();
   }
 }

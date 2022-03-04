@@ -2,10 +2,7 @@ package dev.buchstabet.signalbox.gui;
 
 import dev.buchstabet.signalbox.coordinates.Coordinates;
 import dev.buchstabet.signalbox.coordinates.Position;
-import dev.buchstabet.signalbox.helpbuttons.FRT;
-import dev.buchstabet.signalbox.helpbuttons.FfRT;
-import dev.buchstabet.signalbox.helpbuttons.Reload;
-import dev.buchstabet.signalbox.helpbuttons.Start;
+import dev.buchstabet.signalbox.helpbuttons.*;
 import dev.buchstabet.signalbox.log.LogFrame;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -27,9 +24,13 @@ public class SignalGui extends JFrame {
   private final JScrollBar barHorizontal = new JScrollBar(JScrollBar.HORIZONTAL, 250, 20, 0, 500);
 
   private final JPanel panel;
-  private final FRT FRT;
-  private final FfRT FfRT;
+  private final FHT fht;
+  private final FfRT ffRT;
   private final Start start;
+  private final SGT SGT;
+  private final HaGT haGT;
+  private final WGT wGt;
+
   private final JTextField jTextField = new JTextField("Zoom: " + Coordinates.COORDINATE_SIZE);
   private final LogFrame logFrame = new LogFrame();
 
@@ -99,16 +100,25 @@ public class SignalGui extends JFrame {
     jTextField.setBackground(Color.YELLOW);
     jTextField.setHorizontalAlignment(JTextField.CENTER);
 
-    FRT = new FRT(50, 85, "FRT");
-    panel.add(FRT);
+    fht = new FHT(50, 85, "FHT");
+    panel.add(fht);
 
-    FfRT = new FfRT(50, 120, "FfRT");
-    panel.add(FfRT);
+    ffRT = new FfRT(50, 120, "FfRT");
+    panel.add(ffRT);
 
-    start = new Start(50, 155, "Start");
+    SGT = new SGT(50, 155, "SGT");
+    panel.add(SGT);
+
+    haGT = new HaGT(50, 190, "HaGT");
+    panel.add(haGT);
+
+    wGt = new WGT(50, 225, "WGT");
+    panel.add(wGt);
+
+    start = new Start(50, 260, "Start");
     panel.add(start);
 
-    Reload reload = new Reload(50, 190, "Reload");
+    Reload reload = new Reload(50, 295, "Reload");
     panel.add(reload);
 
     panel.add(logFrame);

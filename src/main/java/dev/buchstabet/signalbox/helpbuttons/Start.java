@@ -1,6 +1,6 @@
 package dev.buchstabet.signalbox.helpbuttons;
 
-import dev.buchstabet.signalbox.coordinates.StartPositionData;
+import dev.buchstabet.signalbox.coordinates.SignalPositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
 
 import java.awt.*;
@@ -16,7 +16,7 @@ public class Start extends HelpButton {
   @Override
   public void actionPerformed(ActionEvent e) {
     setBackground(Color.GREEN);
-    StartPositionData.start = null;
+    SignalPositionData.start = null;
     SignalGui.getInstance().getLogFrame().log("Start was pressed");
   }
 

@@ -15,6 +15,7 @@ public class SwitchManager {
     Bukkit.getScheduler().runTask(Signalbox.getPlugin(Signalbox.class), () -> {
       Block block = Signalbox.getPlugin(Signalbox.class).getLocationPositionMap().get(position).getBlock();
       if (block.getType() != Material.RAILS) return;
+
       BlockState state = block.getState();
       MaterialData data = state.getData();
       Rails rails = (Rails) data;
