@@ -13,7 +13,7 @@ public enum RailPosition {
 
   public static RailPosition getFromId(byte b, Material material) {
 
-    if (material == Material.RAILS) {
+    if (material == Material.RAIL) {
       switch (b) {
         case 5: case 4: case 0: return VERTICAL;
         case 3: case 2:case 1: return HORIZONTAL;

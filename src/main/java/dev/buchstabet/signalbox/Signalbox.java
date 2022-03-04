@@ -47,7 +47,7 @@ public class Signalbox extends JavaPlugin implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) return;
         Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock.getType() != Material.RAILS && clickedBlock.getType() != Material.POWERED_RAIL && clickedBlock.getType() != Material.ACTIVATOR_RAIL && clickedBlock.getType() != Material.DETECTOR_RAIL)
+        if (clickedBlock.getType() != Material.RAIL && clickedBlock.getType() != Material.POWERED_RAIL && clickedBlock.getType() != Material.ACTIVATOR_RAIL && clickedBlock.getType() != Material.DETECTOR_RAIL)
             return;
         event.getPlayer().sendMessage("ID: " + getData(clickedBlock));
     }
@@ -113,7 +113,7 @@ public class Signalbox extends JavaPlugin implements Listener {
         if (locationMap.containsKey(location)) return;
         Position position = new Position(location.getBlockX() - this.start.getBlockX(), location.getBlockZ() - this.start.getBlockZ());
         Material type = location.getBlock().getType();
-        if (type == Material.RAILS
+        if (type == Material.RAIL
                 || type == Material.DETECTOR_RAIL
                 || type == Material.ACTIVATOR_RAIL
                 || type == Material.POWERED_RAIL) {
@@ -132,7 +132,7 @@ public class Signalbox extends JavaPlugin implements Listener {
             PositionData positionData;
             if (type == Material.DETECTOR_RAIL) {
                 positionData = new SignalPositionData(position, data, type, location);
-            } else if (affected.size() >= 3 && type == Material.RAILS) {
+            } else if (affected.size() >= 3 && type == Material.RAIL) {
                 List<Byte> possibleSettings = new ArrayList<>();
                 affected.forEach(pos1 -> affected.forEach(pos2 ->{
                     if (pos1.equals(pos2)) return;
@@ -152,7 +152,7 @@ public class Signalbox extends JavaPlugin implements Listener {
     private void find(int i, int i1, int i2, Location location, List<Position> positions) {
         Location add = location.clone().add(i, i1, i2);
         switch (add.getBlock().getType()) {
-            case RAILS:
+            case RAIL:
             case ACTIVATOR_RAIL:
             case DETECTOR_RAIL:
             case POWERED_RAIL:

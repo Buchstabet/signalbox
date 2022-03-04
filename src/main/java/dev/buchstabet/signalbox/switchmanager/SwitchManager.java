@@ -14,7 +14,7 @@ public class SwitchManager {
   public static void setSwitch(Position position, byte switchPosition) {
     Bukkit.getScheduler().runTask(Signalbox.getPlugin(Signalbox.class), () -> {
       Block block = Signalbox.getPlugin(Signalbox.class).getLocationPositionMap().get(position).getBlock();
-      if (block.getType() != Material.RAILS) return;
+      if (block.getType() != Material.RAIL) return;
 
       BlockState state = block.getState();
       MaterialData data = state.getData();
