@@ -14,7 +14,8 @@ Wird eine Signaltaste gedrückt, wird ein Start ausgewählt. Wird noch eine Sign
 Ist ein Minecart auf dem Start, wird es nun die ausgewählte Strecke fahren.
 
 Die Fahrstraße wird dann grün hervorgehoben.
-![image](https://user-images.githubusercontent.com/71724439/156902140-d4c550d1-19c9-47e2-9f1c-4e65b67b683f.png)
+
+![image](https://user-images.githubusercontent.com/71724439/156902394-cc80b9fe-aeeb-4de4-84dd-bbd16b000397.png)
 
 ## Gleisfreimeldeanlage
 Die Gleisfreimeldeanlage zeigt an, ob ein Gleis besetzt ist (ob ein Minecart auf dem Gleis steht) oder nicht.
@@ -25,12 +26,20 @@ Besetzte Signale sind blau:
 
 Besetzte Gleise sind rot:
 
-![image](https://user-images.githubusercontent.com/71724439/156902214-6bfb40fa-6b26-40e4-bce1-d3ae12e8061d.png)
+![image](https://user-images.githubusercontent.com/71724439/156902342-e9bc7102-95b2-4466-9e90-76da7eb5cfaf.png)
 
 Freie Gleise sind Gelb:
 
-![image](https://user-images.githubusercontent.com/71724439/156902247-5bbaf299-0b09-4c02-acf8-580a93933c89.png)
+![image](https://user-images.githubusercontent.com/71724439/156902347-2c68c989-a0f4-48c1-9f9a-47c9faeedabe.png)
 
+Ist ein Gleis grün und wird befahren, wird sie danach wieder gelb:
+
+![image](https://user-images.githubusercontent.com/71724439/156902486-19c4bd65-6954-40cb-a44e-e26f25bb030a.png)
+
+## Log
+Alle relevanten Tastenbedienungen, werden im Log gespeichert:
+
+![image](https://user-images.githubusercontent.com/71724439/156902528-0df18fa9-c9f0-4543-b013-e29c9f6b9595.png)
 
 ## Die Tasten und deren Bedeutung
 
@@ -52,13 +61,13 @@ Die Taste hat immer die Farbe, die das Signal zeigt.
 
 ### FHT (Fahrstraßenhilfstaste)
 
-![image](https://user-images.githubusercontent.com/71724439/156901906-c4ac997b-8857-47cc-91b3-d6d5cb3da4d5.png)
+![image](https://user-images.githubusercontent.com/71724439/156902411-916aed0a-45b9-4d9f-b7f8-590fdfec08f7.png)
 
 Wird diese Taste und danach eine Signaltaste gedrückt, wird die Fahrstraße aufgelöst, die mit dem Signal verbunden ist.
 
 ### FfRT (Fahrstraßenfreigabetaste)
 
-![image](https://user-images.githubusercontent.com/71724439/156901971-7b3bbef0-a3be-4989-8fc8-7451cd911490.png)
+![image](https://user-images.githubusercontent.com/71724439/156902418-a03d1246-7fd4-4095-b5b4-9ed9c18adac0.png)
 
 Diese Taste wurde etwas zweck entfremdet und dient als Freigabe zur Fahrt in ein besetzes Gleis.
 Wird die Taste gedrückt, können also Fahrstraßen in besetzte Gleise eingestellt werden.
