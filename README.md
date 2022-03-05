@@ -39,7 +39,7 @@ Ist ein Gleis grün und wird befahren, wird sie danach wieder gelb:
 ## Log
 Alle relevanten Tastenbedienungen, werden im Log gespeichert:
 
-![image](https://user-images.githubusercontent.com/71724439/156902528-0df18fa9-c9f0-4543-b013-e29c9f6b9595.png)
+![image](https://user-images.githubusercontent.com/71724439/156902538-eb8724ea-3d60-4ac4-bb4d-e831994ec59e.png)
 
 ## Die Tasten und deren Bedeutung
 
