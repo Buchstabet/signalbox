@@ -37,7 +37,7 @@ Ist ein Gleis grün und wird befahren, wird sie danach wieder gelb:
 ![image](https://user-images.githubusercontent.com/71724439/156902486-19c4bd65-6954-40cb-a44e-e26f25bb030a.png)
 
 ## Wichtige Info
-Das Plugin ist nicht remote fähig, daher kann das nur auf deinem Commputer ausgeführt werden.
+Das Plugin ist nicht remote fähig, daher kann das nur auf deinem Computer ausgeführt werden.
 
 ## Log
 Alle relevanten Tastenbedienungen, werden im Log gespeichert:
