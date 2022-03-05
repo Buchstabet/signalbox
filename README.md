@@ -15,8 +15,6 @@ Ist ein Minecart auf dem Start, wird es nun die ausgewählte Strecke fahren.
 
 Die Fahrstraße wird dann grün hervorgehoben.
 
-![image](https://user-images.githubusercontent.com/71724439/156902394-cc80b9fe-aeeb-4de4-84dd-bbd16b000397.png)
-
 ![ezgif-1-a00439d9ac](https://user-images.githubusercontent.com/71724439/156902933-afdde00e-8482-4694-9263-4bbcf892437d.gif)
 
 ## Gleisfreimeldeanlage
