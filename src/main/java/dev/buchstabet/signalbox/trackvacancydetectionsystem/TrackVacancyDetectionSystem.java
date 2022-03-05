@@ -45,6 +45,7 @@ public class TrackVacancyDetectionSystem implements Listener {
             data.setOccupied((Minecart) vehicle);
             data.draw(SignalGui.getInstance().getPanel().getGraphics());
           }
+
           if (data instanceof SignalPositionData) {
             SignalPositionData signalPositionData = (SignalPositionData) data;
             if (!signalPositionData.getSignal().canDrive())

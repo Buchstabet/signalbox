@@ -96,13 +96,7 @@ public interface PositionData {
   Material getMaterial();
 
   default boolean isSettable() {
-    if (getMaterial() != Material.RAIL) return false;
-    switch (getCurrentSet()) {
-      case 5: case 2: case 3: case 4:
-        return false;
-      default:
-        return true;
-    }
+    return getMaterial() == Material.RAIL;
   }
 
 }

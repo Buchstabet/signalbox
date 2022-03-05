@@ -1,5 +1,6 @@
 package dev.buchstabet.signalbox.coordinates;
 
+import dev.buchstabet.signalbox.switchmanager.SwitchManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -15,7 +16,7 @@ public class RailPositionData implements PositionData {
     public static Position start = null;
 
     private final Position position;
-    private final byte currentSet;
+    private byte currentSet;
     @Setter private boolean set;
     private final Material material;
     private final Location location;
@@ -39,6 +40,10 @@ public class RailPositionData implements PositionData {
         return minecart != null;
     }
 
-
-
+    @Override
+    public void set(byte b) {
+        if (!isSettable()) return;
+        currentSet = b;
+        SwitchManager.setSwitch(position, currentSet);
+    }
 }

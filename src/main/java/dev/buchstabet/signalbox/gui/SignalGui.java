@@ -1,5 +1,6 @@
 package dev.buchstabet.signalbox.gui;
 
+import dev.buchstabet.signalbox.Signalbox;
 import dev.buchstabet.signalbox.coordinates.Coordinates;
 import dev.buchstabet.signalbox.coordinates.Position;
 import dev.buchstabet.signalbox.helpbuttons.*;
@@ -128,7 +129,8 @@ public class SignalGui extends JFrame {
   }
 
   public int calculateSize(int value) {
-    return (500 - (value * 20 - 250 * 20));
+    int scrollMultiplayer = Signalbox.getPlugin(Signalbox.class).getScrollMultiplayer();
+    return (500 - (value * scrollMultiplayer - 250 * scrollMultiplayer));
   }
 
   @SneakyThrows

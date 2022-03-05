@@ -40,6 +40,7 @@ public class Signalbox extends JavaPlugin implements Listener {
     private final Coordinates coordinates = new Coordinates(new ConcurrentHashMap<>());
     private SignalGui signalGui;
     private final List<Location> toLoad = new ArrayList<>();
+    @Getter private int scrollMultiplayer;
 
     // Automatisch alle geraden in Strom schienen verwandeln und powern
 
@@ -64,6 +65,7 @@ public class Signalbox extends JavaPlugin implements Listener {
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         saveDefaultConfig();
+        scrollMultiplayer = getConfig().getInt("scrollmultiplayer");
 
         URL url = SignalGui.class.getClassLoader().getResource("icon.png");
         URLConnection urlConnection = url.openConnection();
@@ -84,7 +86,7 @@ public class Signalbox extends JavaPlugin implements Listener {
             find();
         }
 
-        start.getWorld().getEntities().forEach(entity -> {
+        Bukkit.getScheduler().runTaskLater(this, () -> start.getWorld().getEntities().forEach(entity -> {
             if (!(entity instanceof Minecart)) return;
 
             if (locationMap.containsKey(entity.getLocation().getBlock().getLocation())) {
@@ -92,10 +94,10 @@ public class Signalbox extends JavaPlugin implements Listener {
                         .filter(position -> position.equals(entity.getLocation().getBlock().getLocation()))
                         .forEach(position -> locationMap.get(position).getPositionData().ifPresent(data -> data.setOccupied((Minecart) entity)));
             }
-        });
+        }), 40);
+
+
         getServer().getPluginManager().registerEvents(new TrackVacancyDetectionSystem(), this);
-
-
         signalGui.setVisible(true);
     }
 
