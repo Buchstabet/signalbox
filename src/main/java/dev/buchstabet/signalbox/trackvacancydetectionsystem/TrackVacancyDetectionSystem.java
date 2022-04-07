@@ -1,9 +1,12 @@
 package dev.buchstabet.signalbox.trackvacancydetectionsystem;
 
 import dev.buchstabet.signalbox.Signalbox;
+import dev.buchstabet.signalbox.codenumber.CodeNumber;
 import dev.buchstabet.signalbox.coordinates.Position;
 import dev.buchstabet.signalbox.coordinates.SignalPositionData;
 import dev.buchstabet.signalbox.gui.SignalGui;
+import dev.buchstabet.signalbox.pathfinder.PathPosition;
+import dev.buchstabet.signalbox.pathfinder.PathfinderAlgorithm;
 import lombok.Data;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -15,6 +18,12 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
+import java.awt.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
 // Gleisfreimeldeanlage
 public class TrackVacancyDetectionSystem implements Listener {
 
@@ -24,13 +33,14 @@ public class TrackVacancyDetectionSystem implements Listener {
     if (!(vehicle instanceof Minecart)) return;
     if (event.getFrom().getBlock().equals(event.getTo().getBlock())) return;
 
+    SignalGui signalGui = SignalGui.getInstance();
     {
       Position position = Signalbox.getPlugin(Signalbox.class).getLocationMap().get(event.getFrom().getBlock().getLocation());
       if (position != null) {
         position.getPositionData().ifPresent(data -> {
           if (data.isOccupied()) {
             data.setOccupied(null);
-            data.draw(SignalGui.getInstance().getPanel().getGraphics());
+            data.draw(signalGui.getPanel().getGraphics());
           }
         });
       }
@@ -41,15 +51,34 @@ public class TrackVacancyDetectionSystem implements Listener {
       Position position = Signalbox.getPlugin(Signalbox.class).getLocationMap().get(event.getTo().getBlock().getLocation());
       if (position != null) {
         position.getPositionData().ifPresent(data -> {
-          if (!data.isOccupied()){
+          if (!data.isOccupied()) {
             data.setOccupied((Minecart) vehicle);
-            data.draw(SignalGui.getInstance().getPanel().getGraphics());
+            data.draw(signalGui.getPanel().getGraphics());
           }
 
           if (data instanceof SignalPositionData) {
             SignalPositionData signalPositionData = (SignalPositionData) data;
-            if (!signalPositionData.getSignal().canDrive())
+            if (!signalPositionData.getSignal().canDrive()) {
+              if (SignalPositionData.REGISTERED_MINECART.containsKey(vehicle.getUniqueId())) {
+                signalGui.
+                        getCodeNumberLoader().
+                        getCodeNumbers().
+                        getCodeNumbers().
+                        stream().
+                        filter(codeNumber -> codeNumber.getIdentifier() == SignalPositionData.REGISTERED_MINECART.get(vehicle.getUniqueId())).
+                        findAny().flatMap(codeNumber -> codeNumber.getRailRoutes().stream().filter(railRoute -> railRoute.getStart().getPosition().equals(position)).findAny()).
+                        ifPresent(railRoute -> {
+                          CompletableFuture<Collection<PathPosition>> future = new PathfinderAlgorithm(railRoute.getStart().getPosition(), railRoute.getTarget().getPosition(), signalGui.getCoordinates()).paintBestWay();
+                          future.thenAccept(pathPositions -> {
+                            signalGui.repaint();
+                            signalGui.getStart().setBackground(Color.GREEN);
+                            if (!pathPositions.isEmpty()) signalGui.getLogFrame().log("Der Selbststellbetrieb wurde aktiv");
+                          });
+                        });
+              }
+
               vehicle.setVelocity(new Vector(0, 0, 0));
+            }
           }
         });
       }

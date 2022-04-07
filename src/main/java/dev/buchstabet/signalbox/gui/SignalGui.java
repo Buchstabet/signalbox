@@ -1,16 +1,19 @@
 package dev.buchstabet.signalbox.gui;
 
 import dev.buchstabet.signalbox.Signalbox;
+import dev.buchstabet.signalbox.codenumber.CodeNumberLoader;
 import dev.buchstabet.signalbox.coordinates.Coordinates;
 import dev.buchstabet.signalbox.coordinates.Position;
 import dev.buchstabet.signalbox.helpbuttons.*;
 import dev.buchstabet.signalbox.log.LogFrame;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.TimerTask;
 
 @Getter
@@ -32,8 +35,11 @@ public class SignalGui extends JFrame {
   private final HaGT haGT;
   private final WGT wGt;
 
+  private JTextField codeNumberSelection;
+
   private final JTextField jTextField = new JTextField("Zoom: " + Coordinates.COORDINATE_SIZE);
   private final LogFrame logFrame = new LogFrame();
+  @Setter private CodeNumberLoader codeNumberLoader;
 
   public SignalGui(Coordinates coordinates, BufferedImage icon) {
     this.coordinates = coordinates;
@@ -122,9 +128,17 @@ public class SignalGui extends JFrame {
     Reload reload = new Reload(50, 295, "Reload");
     panel.add(reload);
 
+    CodeNumberButton codeNumberButton = new CodeNumberButton(50, 330);
+    panel.add(codeNumberButton);
+
     panel.add(logFrame);
     logFrame.setBackground(Color.yellow);
     // logFrame.setHorizontalAlignment(JTextField.CENTER);
+
+    codeNumberSelection = new JTextField();
+    codeNumberSelection.setBounds(50, 365, 130, 30);
+    codeNumberSelection.setBackground(Color.white);
+    panel.add(codeNumberSelection);
 
   }
 

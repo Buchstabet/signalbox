@@ -1,5 +1,6 @@
 package dev.buchstabet.signalbox;
 
+import dev.buchstabet.signalbox.codenumber.CodeNumberLoader;
 import dev.buchstabet.signalbox.coordinates.*;
 import dev.buchstabet.signalbox.gui.SignalGui;
 import dev.buchstabet.signalbox.pathfinder.PathfinderAlgorithm;
@@ -22,6 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class Signalbox extends JavaPlugin implements Listener {
     private final Map<Position, Location> locationPositionMap = new HashMap<>();
     @Getter
     private final Map<Location, Position> locationMap = new HashMap<>();
-    private Location start;
+    @Getter private Location start;
     private final Coordinates coordinates = new Coordinates(new ConcurrentHashMap<>());
     private SignalGui signalGui;
     private final List<Location> toLoad = new ArrayList<>();
@@ -84,6 +86,14 @@ public class Signalbox extends JavaPlugin implements Listener {
         toLoad.add(start);
         while (!toLoad.isEmpty()) {
             find();
+        }
+
+        try {
+            CodeNumberLoader codeNumberLoader = new CodeNumberLoader();
+            codeNumberLoader.load();
+            signalGui.setCodeNumberLoader(codeNumberLoader);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         Bukkit.getScheduler().runTaskLater(this, () -> start.getWorld().getEntities().forEach(entity -> {
