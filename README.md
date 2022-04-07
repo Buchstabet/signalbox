@@ -37,7 +37,7 @@ Ist ein Gleis grün und wird befahren, wird sie danach wieder gelb:
 ![image](https://user-images.githubusercontent.com/71724439/156902486-19c4bd65-6954-40cb-a44e-e26f25bb030a.png)
 
 ## Wichtige Info
-Das Plugin ist nicht remote fähig, daher kann das nur auf deinem Commputer ausgeführt werden.
+Das Plugin ist nicht remote fähig, daher kann das nur auf deinem Computer ausgeführt werden.
 
 ## Log
 Alle relevanten Tastenbedienungen, werden im Log gespeichert:
@@ -72,7 +72,7 @@ Wird diese Taste und danach eine Signaltaste gedrückt, wird die Fahrstraße auf
 
 ![image](https://user-images.githubusercontent.com/71724439/156902418-a03d1246-7fd4-4095-b5b4-9ed9c18adac0.png)
 
-Diese Taste wurde etwas zweck entfremdet und dient als Freigabe zur Fahrt in ein besetzes Gleis.
+Diese Taste wurde etwas zweck entfremdet und dient als Freigabe zur Fahrt in ein besetztes Gleis.
 Wird die Taste gedrückt, können also Fahrstraßen in besetzte Gleise eingestellt werden.
 
 ### SGT (Signalgruppentaste)
@@ -103,4 +103,4 @@ Ist ein Start ausgewählt und die Starttaste gedrückt, wird der Start gelöscht
 
 ![image](https://user-images.githubusercontent.com/71724439/156902091-61a4a00a-ea5f-496b-a1b2-fe8047491103.png)
 
-Die Reload taste kann den Server reloaden.
+Die Reload Taste kann den Server reloaden.
