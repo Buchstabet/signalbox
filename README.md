@@ -60,7 +60,7 @@ Die Taste hat immer die Farbe, die das Signal zeigt.
 - Rot: Halt
 - Grün: Fahrt
 - Blau: Halt und besetzt
-- Weiß: Kennlicht (Das Signal ist abgeschaltet und wird weder von Fahrstraßen als auch von Minecarts ignoriert)
+- Weiß: Kennlicht (Das Signal ist abgeschaltet und wird von Fahrstraßen als auch von Minecarts ignoriert)
 
 ### FHT (Fahrstraßenhilfstaste)
 
